@@ -1,1 +1,1 @@
-# sperg-editor
+# Sperg Editor to Edit your Spergs!
