@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Sperg Maker: Upload</title>
+	<meta name="description" content="A tool to create your spergs, its an inside joke">
+	<meta name="keywords" content="sperg maker, aspergers, sperg emoji, special needs, lenny mclennington, kashotex">
+	<meta name="author" content="https://www.kashotex.net/">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link href="https://fonts.googleapis.com/css?family=Spinnaker:400,700" rel="stylesheet" type="text/css">
+
+	<link rel="stylesheet" href="grid.min.css">
+	<link rel="stylesheet" href="main.css">
+	<link rel="icon" type="image/png" href="assets/favicon.png">
+</head>
+<body>
+	<div id="title-bar">
+		<img src="assets/logo.png">
+		<h1 class="logo-font"><a href="index.html">Sperg Editor</a></h1>
+	</div>
+	<div id="upload" class="container center vertical-center">
+		<div class="row">
+			<div class="col-12">
+				<div id="upload-logo">
+					<h1 class="logo-font">Sperg Editor</h1>
+					<img height="70px" src="assets/logo.png">
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<input type="file" id="image-upload" name="image-upload" accept="image/*" />
+				<label for="image-upload">Browse</label>
+			</div>
+		</div>
+	</div>
+	<div id="editor" class="hide container vertical-center">
+		<div class="row center" style="display:flex;justify-content:center">
+			<div class="col-12-sm" style="width:7.5%">
+				<div id="effects" class="row">
+					<div class="col-12 col-3-sm">
+						<label>
+							<input type="radio" name="effect" value="grow" checked>
+							<img src="assets/grow.png">
+						</label>
+					</div>
+					<div class="col-12 col-3-sm">
+						<label>
+							<input type="radio" name="effect" value="shrink">
+							<img src="assets/shrink.png">
+						</label>
+					</div>
+					<div class="col-12 col-3-sm">
+						<label>
+							<input type="radio" name="effect" value="smudge">
+							<img src="assets/smudge.png">
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="col-6 col-12-sm">
+				<canvas id="canvas" width="1200" height="1200"
+					style="max-width:100%;background-image:url(assets/pattern.png);background-size:400px 400px"></canvas>
+				<div class="row" style="height:56px">
+					<button id="fry" onclick="fryCanvas()">
+						<img height="50px" src="assets/fry.png">
+					</button>
+					<button id="download" style="padding-top:2px" onclick="downloadCanvas()">
+						<img height="46px" src="assets/download.png">
+					</button>
+				</div>
+			</div>
+		</div>
+	<footer>
+		<span>Built by <a href="https://www.kashotex.net/">Kashotex</a>.</span>
+		<span style="float: right">
+			<a href="https://github.com/Kashotex/sperg-editor">View on GitHub</a>
+		</span>
+	</footer>
+	<script src="main.js"></script>
+</body>
+</html>
