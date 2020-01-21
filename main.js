@@ -7,7 +7,7 @@ var EFFECT_CONSTANTS = {
 	GROW_AND_SHRINK_AMOUNT: 10,
 	// 90 to 100
 	LIQUIFY_BRUSH_SIZE: 60,
-	LIQUIFY_SMUDGE_SIZE: 20,
+	LIQUIFY_SMUDGE_SIZE: 40,
 	// less than or equal to brush size
 	LIQUIFY_CONTRAST: 0.9,
 	// 0 to 1
