@@ -148,8 +148,7 @@ input[type=file]+label:hover {
 
 [type=radio] + img {
 	cursor: pointer;
-	height: 47px;
-	transition: .1s ease-in-out;
+	height: 50px;
 	padding: 2px;
 }
 
