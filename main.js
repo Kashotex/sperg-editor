@@ -342,6 +342,107 @@ canvas.onmouseup = function () {
 	canvas.onmousemove = null;
 };
 
+
+let brushSize = 50
+
+const svg = document.getElementById('svg-element')
+const cursor = document.getElementById('cursor')
+const warp = new Warp(svg)
+
+const svgPos = svg.getBoundingClientRect()
+const originX = svgPos.left
+const originY = svgPos.top
+
+let pointCount = 0
+let smudging = false
+let mouseX = 0
+let mouseY = 0
+let lastMouseX = 0
+let lastMouseY = 0
+let mouseDeltaX = 0
+let mouseDeltaY = 0
+
+window.addEventListener('keydown', function(e)
+{
+	switch(e.key)
+	{
+		case 'ArrowUp': { brushSize += 10 } break
+		case 'ArrowDown': { brushSize -= 10 }
+	}
+	
+	brushSize = Math.max(10, Math.min(brushSize, 250))
+})
+
+window.addEventListener('mousedown', e => smudging = true)
+window.addEventListener('mouseup', e => smudging = false)
+window.addEventListener('mousemove', function(e)
+{
+	mouseX = e.clientX
+	mouseY = e.clientY
+	mouseDeltaX = mouseX - lastMouseX
+	mouseDeltaY = mouseY - lastMouseY
+	lastMouseX = mouseX
+	lastMouseY = mouseY
+})
+
+function smudge([x, y])
+{
+	
+		var applyContrast = function applyContrast(o, n) {
+		return ~~((1 - CONTRAST) * o + CONTRAST * n);
+	};
+	const pointX = x + originX
+	const pointY = y + originY
+	const deltaX = mouseX - pointX
+	const deltaY = mouseY - pointY
+	const delta = Math.sqrt(deltaX**2 + deltaY**2)
+
+	if(delta <= brushSize)
+	{
+		x += mouseDeltaX * ((brushSize - delta) / brushSize)
+		y += mouseDeltaY * ((brushSize - delta) / brushSize)
+	}
+	
+	return [x, y]
+}
+
+function update()
+{
+	cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`
+	cursor.style.fontSize = `${brushSize}px`
+	
+	if(smudging)
+	{
+		if(pointCount < 4000)
+		{
+			// warp.preInterpolate(smudge, 8)
+			warp.interpolate(8)
+		}
+		
+		pointCount = 0
+		warp.transform(function(points)
+		{
+			pointCount++
+			return smudge(points)
+		})
+		
+		mouseDeltaX = (lastMouseX === mouseX ? 0 : mouseDeltaX)
+		mouseDeltaY = (lastMouseY === mouseY ? 0 : mouseDeltaY)
+	}
+	
+	requestAnimationFrame(update)
+}
+
+update()
+
+
+
+
+
+
+
+
+
 function growShrink(xCoord, yCoord, type) {
 	var radius = EFFECT_CONSTANTS.GROW_AND_SHRINK_RADIUS; // 20 to 225
 
@@ -422,73 +523,7 @@ function growShrink(xCoord, yCoord, type) {
 	}
 }
 
-function smudge(x, y) {
-	var BRUSH_SIZE = EFFECT_CONSTANTS.LIQUIFY_BRUSH_SIZE;
-	var SMUDGE_SIZE = EFFECT_CONSTANTS.LIQUIFY_SMUDGE_SIZE;
-	var CONTRAST = EFFECT_CONSTANTS.LIQUIFY_CONTRAST;
 
-	var applyContrast = function applyContrast(o, n) {
-		return ~~((1 - CONTRAST) * o + CONTRAST * n);
-	};
-
-	var dx = x - oldMouseX,
-		dy = y - oldMouseY;
-	oldMouseX = x;
-	oldMouseY = y;
-	x = x - parseInt(BRUSH_SIZE / 2);
-	y = y - parseInt(BRUSH_SIZE / 2);
-
-	if (
-		x < 0 ||
-		y < 0 ||
-		x + BRUSH_SIZE >= canvas.width ||
-		y + BRUSH_SIZE >= canvas.height
-	) {
-		return;
-	}
-
-	var bitmap = ctx.getImageData(x, y, BRUSH_SIZE, BRUSH_SIZE);
-	dx =
-		dx > 0
-			? ~~Math.min(bitmap.width / 2, dx)
-			: ~~Math.max(-bitmap.width / 2, dx);
-	dy =
-		dy > 0
-			? ~~Math.min(bitmap.height / 2, dy)
-			: ~~Math.max(-bitmap.height / 2, dy);
-	var buffer = ctx.createImageData(bitmap.width, bitmap.height),
-		d = bitmap.data,
-		_d = buffer.data,
-		bit = 0;
-
-	for (var row = 0; row < bitmap.height; row++) {
-		for (var col = 0; col < bitmap.width; col++) {
-			var xd = bitmap.width / 2 - col,
-				yd = bitmap.height / 2 - row,
-				dist = Math.sqrt(xd * xd + yd * yd),
-				xLiquify = (bitmap.width - dist) / bitmap.width,
-				yLiquify = (bitmap.height - dist) / bitmap.height,
-				skewX =
-					dist > SMUDGE_SIZE / 2 ? -dx * xLiquify * xLiquify * xLiquify : -dx,
-				skewY =
-					dist > SMUDGE_SIZE / 2 ? -dy * yLiquify * yLiquify * yLiquify : -dy,
-				fromX = col + skewX,
-				fromY = row + skewY;
-			if (fromX < 0 || fromX > bitmap.width) fromX = col;
-			if (fromY < 0 || fromY > bitmap.height) fromY = row;
-			var oBit = ~~fromX * 4 + ~~fromY * bitmap.width * 4;
-			if (d[oBit] === undefined) oBit = bit;
-			_d[bit] = applyContrast(d[bit], d[oBit]); // r
-
-			_d[bit + 1] = applyContrast(d[bit + 1], d[oBit + 1]); // g
-
-			_d[bit + 2] = applyContrast(d[bit + 2], d[oBit + 2]); // b
-
-			_d[bit + 3] = applyContrast(d[bit + 3], d[oBit + 3]); // a
-
-			bit += 4;
-		}
-	}
 
 	try {
 		ctx.putImageData(buffer, x, y);
