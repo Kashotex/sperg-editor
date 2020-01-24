@@ -38,6 +38,22 @@ body {
 	font-weight: 800;
 }
 
+#cursor {
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin-top: -0.5em;
+	margin-left: -0.5em;
+	width: 1em;
+	height: 1em;
+	border-radius: 50%;
+	box-shadow:
+		0 0 0 1px black,
+		inset 0 0 0 1px white;
+}
+
+
 #title-bar a {
 	color: black;
 	text-decoration: none;
