@@ -521,7 +521,7 @@ function growShrink(xCoord, yCoord, type) {
 
 		ctx.putImageData(newImageData, xCoord - distLeft, yCoord - distUp);
 	}
-}
+
 
 
 
