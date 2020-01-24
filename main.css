@@ -134,7 +134,6 @@ input[type=file]+label:hover {
 }
 
 #effects {
-	padding: 5px;
 	background: #ccc;
 	border: 6px solid #afafaf;
 }
